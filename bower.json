@@ -1,0 +1,21 @@
+{
+  "name": "elevia",
+  "version": "0.0.0",
+  "homepage": "https://github.com/robertleeplummerjr/elevia",
+  "authors": [
+    "Robert Plummer <robertleeplummerjr@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Class.js": "class#~2.0.0",
+    "brain": "https://github.com/harthur/brain/archive/gh-pages.zip",
+    "elevatorsaga": "https://github.com/magwo/elevatorsaga/archive/master.zip"
+  }
+}

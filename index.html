@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Elevai - Elevator Saga Solved with AI</title>
+</head>
+<body style="margin:0;padding:0;overflow:hidden">
+<iframe
+    id="frame"
+    src="bower_components/elevatorsaga/index.html"
+    frameborder="0"
+    style="
+      overflow: hidden;
+      width:100%;
+      "
+    width="100%"></iframe>
+</body>
+<script src="bower_components/Class.js/Class.js"></script>
+<script src="elevia.js"></script>
+<script>
+  var frame = document.querySelector('#frame');
+
+  function setFrameHeight() {
+    frame.style.height = window.innerHeight + 'px';
+  }
+
+  setFrameHeight();
+
+  window.onresize = setFrameHeight;
+  frame.onload = function() {
+    new Elevia.Learn(frame.contentWindow, frame.contentDocument);
+  };
+</script>
+</html>
