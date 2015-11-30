@@ -14,8 +14,8 @@
     "tests"
   ],
   "dependencies": {
-    "Class.js": "class#~2.0.0",
     "brain": "https://github.com/harthur/brain/archive/gh-pages.zip",
-    "elevatorsaga": "https://github.com/magwo/elevatorsaga/archive/master.zip"
+    "elevatorsaga": "https://github.com/magwo/elevatorsaga/archive/master.zip",
+    "idea.js": "*"
   }
 }
