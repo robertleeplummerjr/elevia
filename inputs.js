@@ -1,26 +1,15 @@
-export default class extends Array {
-  constructor() {
-    super();
-    this.add(Array.prototype.slice.call(arguments, 0));
-  }
-  
+import FlatArray from './flat-array';
+
+export default class Inputs extends FlatArray {
   reset() {
-    this.inputs.forEach((input) => {
+    this.forEach((input) => {
       input.resetValue();
     });
   }
-  
-  toArray() {
-    return this.inputs.map((input) => {
+
+  toPrimitives() {
+    return this.map((input) => {
       return input.value;
     });
-  }
-  
-  add(input) {
-    if (typeof input === 'array') {
-      input.forEach((input) => this.add(input));
-      return;
-    }
-    this.push(input);
   }
 }

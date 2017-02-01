@@ -79,6 +79,23 @@
       <i class="fa fa-plus-square timescale_increase unselectable"></i>
     </h3>
   </script>
+
+  <script type="text/template" id="world-template">
+    <div class="world">
+      <div class="feedbackcontainer"></div>
+      <div class="innerworld">
+      </div>
+      <div class="statscontainer">
+        <div style="top: 20px"><span class="key">Transported</span><span class="value transportedcounter"></span></div>
+        <div style="top: 40px"><span class="key">Elapsed time</span><span class="value elapsedtime"></span></div>
+        <div style="top: 60px"><span class="key">Transported/s</span><span class="value transportedpersec"></span></div>
+        <div style="top: 80px"><span class="key">Avg waiting time</span><span class="value avgwaittime"></span></div>
+        <div style="top: 100px"><span class="key">Max waiting time</span><span class="value maxwaittime"></span></div>
+        <div style="top: 120px"><span class="key" title="Number of floors that have been travelled by elevators">Moves</span><span class="value movecount"></span></div>
+      </div>
+    </div>
+    <hr />
+  </script>
 </head>
 <body>
 <div class="container">
@@ -96,34 +113,7 @@
   <div class="challenge" style="height: 40px">
   </div>
 
-  <div class="world">
-    <div class="feedbackcontainer"></div>
-    <div class="innerworld">
-    </div>
-    <div class="statscontainer">
-      <div style="top: 20px"><span class="key">Transported</span><span class="value transportedcounter"></span></div>
-      <div style="top: 40px"><span class="key">Elapsed time</span><span class="value elapsedtime"></span></div>
-      <div style="top: 60px"><span class="key">Transported/s</span><span class="value transportedpersec"></span></div>
-      <div style="top: 80px"><span class="key">Avg waiting time</span><span class="value avgwaittime"></span></div>
-      <div style="top: 100px"><span class="key">Max waiting time</span><span class="value maxwaittime"></span></div>
-      <div style="top: 120px"><span class="key" title="Number of floors that have been travelled by elevators">Moves</span><span class="value movecount"></span></div>
-    </div>
-  </div>
-
-  <div class="codestatus"></div>
+  <div id="worlds"></div>
 </div>
 </body>
-<script>
-  var elevia;
-
-  setInterval(function() {
-    if (window.world) {
-      if (!elevia) {
-        elevia = new Elevia(world);
-      }
-
-      elevia.think();
-    }
-  }, 1000);
-</script>
 </html>

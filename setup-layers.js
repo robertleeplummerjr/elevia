@@ -1,9 +1,16 @@
-export default const function (elevator, elevators, floors) {
+import Inputs from './inputs';
+import Input from './input';
+import OutputHandlers from './output-handlers';
+
+export default (elevator, elevators, floors) => {
+  const inputs = setupInputs();
+  const outputHandlers = setupOutputHandlers();
+
   return {
-    inputs: setupInputs(),
-    outputs: setupOutputs()
+    inputs,
+    outputHandlers
   };
-  
+
   function setupInputs() {
     return new Inputs(
       setupUpButtonInput(),
@@ -23,9 +30,10 @@ export default const function (elevator, elevators, floors) {
     );
   }
 
-  function setupOutputs() {
+  function setupOutputHandlers() {
     return new OutputHandlers(
-      setupGoToFloorOutputHandlers()
+      setupGoToFloorOutputHandlers(),
+      setupStopElevatorHandler()
     );
   }
 
@@ -33,22 +41,22 @@ export default const function (elevator, elevators, floors) {
     return floors.map((floor) => new Input({
       floor: floor,
       floorEvent: 'up_button_pressed',
-      floorEventFunction: (_floor, eventName, value) => {
+      floorEventFunction: (_floor, eventName, value, input) => {
         inputs.reset();
-        this.setValue(1);
-      });
-    });
+        input.setValue(1);
+      }
+    }));
   }
 
   function setupDownButtonInput() {
     return floors.map((floor) => new Input({
       floor: floor,
       floorEvent: 'down_button_pressed',
-      floorEventFunction: (_floor, eventName, value) => {
+      floorEventFunction: (_floor, eventName, value, input) => {
         inputs.reset();
-        this.setValue(1);
-      });
-    });
+        input.setValue(1);
+      }
+    }));
   }
 
   function setupElevatorFloorButtonInputs() {
@@ -56,12 +64,12 @@ export default const function (elevator, elevators, floors) {
       floor: floor,
       elevator: elevator,
       elevatorEvent: 'floor_button_pressed',
-      elevatorEventFunction: (elevator, eventName, floorNum) => {
+      elevatorEventFunction: (elevator, eventName, floorNum, input) => {
         if (floorNum !== floor.level) return;
         inputs.reset();
-        this.setValue(1);
-      });
-    });
+        input.setValue(1);
+      }
+    }));
   }
 
   function setupPassingFloorInputs() {
@@ -69,12 +77,12 @@ export default const function (elevator, elevators, floors) {
       floor: floor,
       elevator: elevator,
       elevatorEvent: 'passing_floor',
-      elevatorEventFunction: (elevator, eventName, floorNum) => {
+      elevatorEventFunction: (elevator, eventName, floorNum, input) => {
         if (floorNum !== floor.level) return;
         inputs.reset();
-        this.setValue(1);
-      });
-    });
+        input.setValue(1);
+      }
+    }));
   }
 
   function setupStoppedAtFloorInputs() {
@@ -82,16 +90,16 @@ export default const function (elevator, elevators, floors) {
       floor: floor,
       elevator: elevator,
       elevatorEvent: 'stopped_at_floor',
-      elevatorEventFunction: (elevator, eventName, floorNum) => {
+      elevatorEventFunction: (elevator, eventName, floorNum, input) => {
         if (floorNum !== floor.level) return;
         inputs.reset();
-        this.setValue(1);
-      });
-    });
+        input.setValue(1);
+      }
+    }));
   }
 
   function setupElevatorsAlreadyHandlingFloorsInputs() {
-    var inputs = [];
+    const inputs = [];
     elevators.forEach((elevator) => {
       floors.forEach((floor) => {
         inputs.push(new Input(() => {
@@ -110,17 +118,14 @@ export default const function (elevator, elevators, floors) {
 
   function setupDestinationFloorsQueueInputs() {
     return floors.map((floor) => new Input(() => {
-        return elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
-      });
-    });
+      return elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
+    }));
   }
 
   function setupCurrentFloorsInputs() {
-    return floors.map((floor) => {
-      return new Input(() => {
-        return elevator.currentFloor() === floor ? 1 : 0;
-      });
-    });
+    return floors.map((floor) => new Input(() => {
+      return elevator.currentFloor() === floor ? 1 : 0;
+    }));
   }
 
   function setupGoingUpInput() {
@@ -168,11 +173,18 @@ export default const function (elevator, elevators, floors) {
   }
 
   function setupGoToFloorOutputHandlers() {
-    return floors.map((floor) => new OutputHandler((value) {
-      //if we are REALLY sure, then go to floor
-      if (value > 0.8) {
-        elevator.goToFloor(floor);
-      }
-    }));
+    return floors.map((floor) => (value) => {
+      //if we are not REALLY sure, then do nothing
+      if (value < 0.8) return;
+
+      elevator.goToFloor(floor);
+    });
+  }
+
+  function setupStopElevatorHandler() {
+    return (value) => {
+      if (value < 0.9) return;
+      elevator.stop();
+    };
   }
 };

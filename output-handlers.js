@@ -1,15 +1,9 @@
-export default class {
-  constructor(outputHandlers) {
-    this.outputHandlers = outputHandlers;
-  }
-  
-  handle(outputs) {
-    this.outputHandlers.forEach((outputHandler, i) => {
+import FlatArray from './flat-array';
+
+export default class extends FlatArray {
+  run(outputs) {
+    this.forEach((outputHandler, i) => {
       outputHandler(outputs[i]);
     });
-  }
-  
-  add(outputHandler) {
-    this.outputHandlers.push(outputHandler);
   }
 }
