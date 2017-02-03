@@ -27,7 +27,7 @@ export default class ElevatorNervousSystem {
           this.waitingUserCountLast = waiting;
         }
 
-        if (riding < self.ridingUserCountLast) {
+        if (riding < this.ridingUserCountLast) {
           reward++;
           this.ridingUserCountLast = riding;
         }

@@ -9,7 +9,7 @@ var codeObj = {
   update: function() {}
 };
 
-function createRunner() {
+function createApp() {
   var tsKey = "elevatorTimeScale";
   var params = {};
   var $worlds = $('#worlds');
@@ -32,7 +32,6 @@ function createRunner() {
     console.log("World raised code error", e);
   });
 
-  console.log(app.worldController);
   app.worldCreator = createWorldCreator();
   app.world = undefined;
 
@@ -109,13 +108,5 @@ function createRunner() {
     app.worldController.setTimeScale(timeScale);
     app.startChallenge(requestedChallenge, autoStart);
   });
+  return app;
 }
-
-$(function() {
-  createRunner();
-  createRunner();
-  createRunner();
-  createRunner();
-  createRunner();
-  createRunner();
-});

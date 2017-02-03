@@ -18,6 +18,7 @@ export default (elevator, elevators, floors) => {
       setupElevatorFloorButtonInputs(),
       setupPassingFloorInputs(),
       setupStoppedAtFloorInputs(),
+      setupAlreadyHandlingFloorsInputs,
       setupElevatorsAlreadyHandlingFloorsInputs(),
       setupPressedFloorsInputs(),
       setupDestinationFloorsQueueInputs(),
@@ -26,6 +27,7 @@ export default (elevator, elevators, floors) => {
       setupGoingDownInput(),
       setupMaxPassengerCountInput(),
       setupLoadFactorInput(),
+      setupElevatorsLoadFactor(),
       setupDestinationDirectionInputs()
     );
   }
@@ -98,12 +100,21 @@ export default (elevator, elevators, floors) => {
     }));
   }
 
+  function setupAlreadyHandlingFloorsInputs() {
+    floors.forEach((floor) => {
+      inputs.push(new Input(() => {
+        return elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
+      }));
+    });
+  }
+
   function setupElevatorsAlreadyHandlingFloorsInputs() {
     const inputs = [];
-    elevators.forEach((elevator) => {
+    elevators.forEach((_elevator) => {
+      if (_elevator === elevator) return;
       floors.forEach((floor) => {
         inputs.push(new Input(() => {
-          return elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
+          return _elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
         }));
       });
     });
@@ -146,6 +157,16 @@ export default (elevator, elevators, floors) => {
   function setupLoadFactorInput() {
     return new Input(() => {
       return elevator.loadFactor();
+    });
+  }
+
+  function setupElevatorsLoadFactor() {
+    const result = [];
+    return elevators.forEach((_elevator) => {
+      if (_elevator === elevator) return;
+      result.push(new Input(() => {
+        return _elevator.loadFactor();
+      }));
     });
   }
 
