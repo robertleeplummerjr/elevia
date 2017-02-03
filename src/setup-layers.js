@@ -2,13 +2,18 @@ import Inputs from './inputs';
 import Input from './input';
 import OutputHandlers from './output-handlers';
 
-export default (elevator, elevators, floors) => {
+export default (options) => {
+  const { elevator, elevators, floors } = options;
+  let brain;
   const inputs = setupInputs();
   const outputHandlers = setupOutputHandlers();
 
   return {
     inputs,
-    outputHandlers
+    outputHandlers,
+    insertBrain: (_brain) => {
+        brain = _brain;
+    }
   };
 
   function setupInputs() {
@@ -41,61 +46,71 @@ export default (elevator, elevators, floors) => {
 
   function setupUpButtonInput() {
     return floors.map((floor) => new Input({
-      floor: floor,
+      floor,
+      floors,
       floorEvent: 'up_button_pressed',
       floorEventFunction: (_floor, eventName, value, input) => {
         inputs.reset();
         input.setValue(1);
+        brain.think();
       }
     }));
   }
 
   function setupDownButtonInput() {
     return floors.map((floor) => new Input({
-      floor: floor,
+      floor,
+      floors,
       floorEvent: 'down_button_pressed',
       floorEventFunction: (_floor, eventName, value, input) => {
         inputs.reset();
         input.setValue(1);
+        brain.think();
       }
     }));
   }
 
   function setupElevatorFloorButtonInputs() {
     return floors.map((floor) => new Input({
-      floor: floor,
-      elevator: elevator,
+      floor,
+      floors,
+      elevator,
       elevatorEvent: 'floor_button_pressed',
       elevatorEventFunction: (elevator, eventName, floorNum, input) => {
         if (floorNum !== floor.level) return;
         inputs.reset();
         input.setValue(1);
+        brain.think();
       }
     }));
   }
 
   function setupPassingFloorInputs() {
     return floors.map((floor) => new Input({
-      floor: floor,
-      elevator: elevator,
+      floor,
+      floors,
+      elevator,
       elevatorEvent: 'passing_floor',
       elevatorEventFunction: (elevator, eventName, floorNum, input) => {
         if (floorNum !== floor.level) return;
         inputs.reset();
         input.setValue(1);
+        brain.think();
       }
     }));
   }
 
   function setupStoppedAtFloorInputs() {
     return floors.map((floor) => new Input({
-      floor: floor,
-      elevator: elevator,
+      floor,
+      floors,
+      elevator,
       elevatorEvent: 'stopped_at_floor',
       elevatorEventFunction: (elevator, eventName, floorNum, input) => {
         if (floorNum !== floor.level) return;
         inputs.reset();
         input.setValue(1);
+        brain.think();
       }
     }));
   }
@@ -172,19 +187,19 @@ export default (elevator, elevators, floors) => {
 
   function setupDestinationDirectionInputs() {
     return [
-      new Input(function() {
+      new Input(() => {
         if (elevator.destinationDirection() === 'up') {
           return 1;
         }
         return 0;
       }),
-      new Input(function() {
+      new Input(() => {
         if (elevator.destinationDirection() === 'down') {
           return 1;
         }
         return 0;
       }),
-      new Input(function() {
+      new Input(() => {
         if (elevator.destinationDirection() === 'stopped') {
           return 1;
         }

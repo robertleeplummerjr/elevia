@@ -3,7 +3,8 @@ import setupLayers from './setup-layers';
 export default class ElevatorNervousSystem {
   constructor(world, elevator) {
     const { elevators, floors } = world;
-    const { inputs, outputHandlers } = setupLayers(elevator, elevators, floors);
+    const { inputs, outputHandlers, insertBrain } = setupLayers({ elevator, elevators, floors });
+    this.moves = 0;
     this.inputs = inputs;
     this.outputHandlers = outputHandlers;
     this.world = world;
@@ -18,6 +19,7 @@ export default class ElevatorNervousSystem {
       sense: inputs.toPrimitives,
       goal: () => {
         let reward = 0;
+        this.moves++;
         const waiting = this.waitingUserCount();
         const riding = this.ridingUserCount();
 
@@ -36,6 +38,7 @@ export default class ElevatorNervousSystem {
       },
       action: outputHandlers.run
     });
+    insertBrain(this.brain);
   }
 
   ridingUserCount() {
@@ -58,5 +61,17 @@ export default class ElevatorNervousSystem {
     });
 
     return count;
+  }
+
+  movesCount() {
+    this.elevator.
+  }
+
+  averageWaitingTimeCount() {
+
+  }
+
+  resetMoves() {
+    this.moves = 0;
   }
 }

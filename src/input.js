@@ -5,7 +5,9 @@ export default class Input {
       return;
     }
     this.getValue = null;
+    this.brain = options.brain;
     this.floor = options.floor;
+    this.floors = options.floors;
     this.floorEvent = options.floorEvent;
     this.floorEventFunction = options.floorEventFunction;
 
