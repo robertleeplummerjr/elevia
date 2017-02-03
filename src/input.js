@@ -16,7 +16,7 @@ export default class Input {
     this.elevatorEventFunction = options.elevatorEventFunction;
 
     if (this.floorEvent && this.floorEventFunction) {
-      floors.forEach((floor) => {
+      this.floors.forEach((floor) => {
         floor.on(this.floorEvent, (value) => {
           this.floorEventFunction(floor, this.floorEvent, value, this);
         });
@@ -26,10 +26,10 @@ export default class Input {
     if (this.elevatorEvent && this.elevatorEventFunction) {
       if (this.elevator) {
         this.elevator.on(this.elevatorEvent, (value) => {
-          this.elevatorEventFunction(this.elevator, this.elevatorEvent, value);
+          this.elevatorEventFunction(this.elevator, this.elevatorEvent, value, this);
         });
       } else {
-        elevators.forEach((elevator) => {
+        this.elevators.forEach((elevator) => {
           elevator.on(this.elevatorEvent, (value) => {
             this.floorEventFunction(elevator, this.elevatorEvent, value, this);
           });

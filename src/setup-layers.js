@@ -23,7 +23,7 @@ export default (options) => {
       setupElevatorFloorButtonInputs(),
       setupPassingFloorInputs(),
       setupStoppedAtFloorInputs(),
-      setupAlreadyHandlingFloorsInputs,
+      setupAlreadyHandlingFloorsInputs(),
       setupElevatorsAlreadyHandlingFloorsInputs(),
       setupPressedFloorsInputs(),
       setupDestinationFloorsQueueInputs(),
@@ -116,11 +116,15 @@ export default (options) => {
   }
 
   function setupAlreadyHandlingFloorsInputs() {
+    const inputs = [];
     floors.forEach((floor) => {
       inputs.push(new Input(() => {
-        return elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
+        const queue = elevator.checkDestinationQueue();
+        if (!queue) return 0;
+        return queue.indexOf(floor) !== -1 ? 1 : 0;
       }));
     });
+    return inputs;
   }
 
   function setupElevatorsAlreadyHandlingFloorsInputs() {
@@ -129,7 +133,9 @@ export default (options) => {
       if (_elevator === elevator) return;
       floors.forEach((floor) => {
         inputs.push(new Input(() => {
-          return _elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
+          const queue = _elevator.checkDestinationQueue();
+          if (!queue) return 0;
+          return queue.indexOf(floor) !== -1 ? 1 : 0;
         }));
       });
     });
@@ -144,7 +150,9 @@ export default (options) => {
 
   function setupDestinationFloorsQueueInputs() {
     return floors.map((floor) => new Input(() => {
-      return elevator.checkDestinationQueue().indexOf(floor) !== -1 ? 1 : 0;
+      const queue = elevator.checkDestinationQueue();
+      if (!queue) return 0;
+      return queue.indexOf(floor) !== -1 ? 1 : 0;
     }));
   }
 
@@ -210,10 +218,11 @@ export default (options) => {
 
   function setupGoToFloorOutputHandlers() {
     return floors.map((floor) => (value) => {
+      console.log(value);
       //if we are not REALLY sure, then do nothing
-      if (value < 0.8) return;
+      if (value < 0.5) return;
 
-      elevator.goToFloor(floor);
+      elevator.goToFloor(floor.level);
     });
   }
 

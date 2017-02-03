@@ -9,7 +9,7 @@ var codeObj = {
   update: function() {}
 };
 
-function createApp() {
+function createApp(startCb) {
   var tsKey = "elevatorTimeScale";
   var params = {};
   var $worlds = $('#worlds');
@@ -78,6 +78,7 @@ function createApp() {
     });
 
     console.log("Starting...");
+    if (startCb) startCb();
     app.worldController.start(app.world, codeObj, window.requestAnimationFrame, autoStart);
   };
 

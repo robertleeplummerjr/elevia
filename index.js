@@ -1,11 +1,18 @@
 var worlds = 20;
+
 $(function() {
   var apps = [];
+  var started = 0;
   for (var i = 0; i < worlds; i++) {
-    apps.push(createApp());
+    var app = createApp(function() {
+      started++;
+      if (started === worlds) {
+        elevia.initWorlds(apps.map(function(app) { return app.world; }));
+      }
+
+    });
+    apps.push(app);
   }
-  var elevia = new Elivia({
-    count: count,
-    worlds: apps.map(function(app) { return app.world; })
-  });
+
+  var elevia = new Elevia();
 });
