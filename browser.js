@@ -29,7 +29,6 @@ var ElevatorNervousSystem = function () {
         outputHandlers = _setupLayers.outputHandlers,
         insertBrain = _setupLayers.insertBrain;
 
-    this.moves = 0;
     this.inputs = inputs;
     this.outputHandlers = outputHandlers;
     this.world = world;
@@ -44,7 +43,6 @@ var ElevatorNervousSystem = function () {
       sense: inputs.toPrimitives.bind(inputs),
       goal: function goal() {
         var reward = 0;
-        _this.moves++;
         var waiting = _this.waitingUserCount();
         var riding = _this.ridingUserCount();
 
@@ -90,14 +88,6 @@ var ElevatorNervousSystem = function () {
 
       return count;
     }
-  }, {
-    key: 'averageWaitingTimeCount',
-    value: function averageWaitingTimeCount() {}
-  }, {
-    key: 'resetMoves',
-    value: function resetMoves() {
-      this.moves = 0;
-    }
   }]);
 
   return ElevatorNervousSystem;
@@ -125,7 +115,6 @@ var Elevia = function () {
   function Elevia() {
     _classCallCheck(this, Elevia);
 
-    var index = 0;
     this.worlds = null;
     this.hive = null;
   }
@@ -133,20 +122,28 @@ var Elevia = function () {
   _createClass(Elevia, [{
     key: 'initWorlds',
     value: function initWorlds(worlds) {
+      this.worlds = worlds;
       var index = 0;
+      var lookup = [];
+      worlds.forEach(function (world) {
+        world.elevators.forEach(function (elevator) {
+          lookup.push({
+            world: world,
+            elevator: elevator
+          });
+        });
+      });
+
       this.hive = new ann.Hive({
-        count: worlds.length,
+        count: lookup.length,
         initType: function initType() {
-          var world = worlds[index];
-          world.elevators.forEach(function (elevator) {
-            return new _elevatorNervousSystem2.default(world, elevator);
-          });
+          var _lookup$index = lookup[index],
+              world = _lookup$index.world,
+              elevator = _lookup$index.elevator;
+
+          var elevatorNervousSystem = new _elevatorNervousSystem2.default(world, elevator);
           index++;
-        },
-        sort: function sort(elevatorNervousSystems) {
-          elevatorNervousSystems.sort(function (a, b) {
-            return a.moves > b.moves;
-          });
+          return elevatorNervousSystem;
         }
       });
     }
@@ -617,7 +614,6 @@ exports.default = function (options) {
   function setupGoToFloorOutputHandlers() {
     return floors.map(function (floor) {
       return function (value) {
-        console.log(value);
         //if we are not REALLY sure, then do nothing
         if (value < 0.5) return;
 

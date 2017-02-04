@@ -28,7 +28,6 @@ var ElevatorNervousSystem = function () {
         outputHandlers = _setupLayers.outputHandlers,
         insertBrain = _setupLayers.insertBrain;
 
-    this.moves = 0;
     this.inputs = inputs;
     this.outputHandlers = outputHandlers;
     this.world = world;
@@ -43,7 +42,6 @@ var ElevatorNervousSystem = function () {
       sense: inputs.toPrimitives.bind(inputs),
       goal: function goal() {
         var reward = 0;
-        _this.moves++;
         var waiting = _this.waitingUserCount();
         var riding = _this.ridingUserCount();
 
@@ -88,14 +86,6 @@ var ElevatorNervousSystem = function () {
       });
 
       return count;
-    }
-  }, {
-    key: 'averageWaitingTimeCount',
-    value: function averageWaitingTimeCount() {}
-  }, {
-    key: 'resetMoves',
-    value: function resetMoves() {
-      this.moves = 0;
     }
   }]);
 

@@ -4,7 +4,6 @@ export default class ElevatorNervousSystem {
   constructor(world, elevator) {
     const { elevatorInterfaces: elevators, floors } = world;
     const { inputs, outputHandlers, insertBrain } = setupLayers({ elevator: elevators[world.elevators.indexOf(elevator)], elevators, floors });
-    this.moves = 0;
     this.inputs = inputs;
     this.outputHandlers = outputHandlers;
     this.world = world;
@@ -19,7 +18,6 @@ export default class ElevatorNervousSystem {
       sense: inputs.toPrimitives.bind(inputs),
       goal: () => {
         let reward = 0;
-        this.moves++;
         const waiting = this.waitingUserCount();
         const riding = this.ridingUserCount();
 
@@ -61,13 +59,5 @@ export default class ElevatorNervousSystem {
     });
 
     return count;
-  }
-
-  averageWaitingTimeCount() {
-
-  }
-
-  resetMoves() {
-    this.moves = 0;
   }
 }

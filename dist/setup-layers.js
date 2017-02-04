@@ -230,7 +230,6 @@ exports.default = function (options) {
   function setupGoToFloorOutputHandlers() {
     return floors.map(function (floor) {
       return function (value) {
-        console.log(value);
         //if we are not REALLY sure, then do nothing
         if (value < 0.5) return;
 

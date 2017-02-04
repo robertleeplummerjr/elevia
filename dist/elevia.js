@@ -18,7 +18,6 @@ var Elevia = function () {
   function Elevia() {
     _classCallCheck(this, Elevia);
 
-    var index = 0;
     this.worlds = null;
     this.hive = null;
   }
@@ -26,20 +25,28 @@ var Elevia = function () {
   _createClass(Elevia, [{
     key: 'initWorlds',
     value: function initWorlds(worlds) {
+      this.worlds = worlds;
       var index = 0;
+      var lookup = [];
+      worlds.forEach(function (world) {
+        world.elevators.forEach(function (elevator) {
+          lookup.push({
+            world: world,
+            elevator: elevator
+          });
+        });
+      });
+
       this.hive = new ann.Hive({
-        count: worlds.length,
+        count: lookup.length,
         initType: function initType() {
-          var world = worlds[index];
-          world.elevators.forEach(function (elevator) {
-            return new _elevatorNervousSystem2.default(world, elevator);
-          });
+          var _lookup$index = lookup[index],
+              world = _lookup$index.world,
+              elevator = _lookup$index.elevator;
+
+          var elevatorNervousSystem = new _elevatorNervousSystem2.default(world, elevator);
           index++;
-        },
-        sort: function sort(elevatorNervousSystems) {
-          elevatorNervousSystems.sort(function (a, b) {
-            return a.moves > b.moves;
-          });
+          return elevatorNervousSystem;
         }
       });
     }
